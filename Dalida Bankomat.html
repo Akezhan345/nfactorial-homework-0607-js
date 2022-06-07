@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+	<style type="text/css">
+		
+	</style>
+</head>
+<body>
+
+
+
+
+
+
+<script type="text/javascript">
+	let myUser = {
+		fName : "",
+		password : "",
+		ifInDebt : false,
+		cashAmount : 0,
+		transactionHistory : [],
+		showInfo : function(){
+			console.log(this.fName)
+			console.log(this.password)
+			console.log(this.cashAmount)
+			if (this.transactionHistory.length == 0 ) {
+				console.log("Выписка " + this.transactionHistory + ":нет")
+			}else{
+				console.log("Выписка " + this.transactionHistory)
+			}
+			
+			novigation()
+		} 
+	}
+	let historyTaken = [];
+	const limit = 300000;
+
+
+
+	let exit = () => {
+		delete myUser
+		alert("Чтобы использовать банкомат обновите браузер")
+	}
+	function confirm(name, amountOfCash, password){
+		myUser.fName = name;
+		myUser.password = password;
+		myUser.cashAmount = amountOfCash;
+	}
+
+	function validNum(text){
+		let num = parseInt(prompt(text))
+		while (Number.isNaN(num)){
+
+ 			num = parseInt(prompt("Введите корректное число"))
+
+ 		}
+ 		return num
+	}
+
+	function addMoney(){
+		let amount = validNum("Какую сумму желаете пополнить?")
+		myUser.cashAmount += amount;
+		myUser.transactionHistory.push(`+ ${amount}`);
+		alert("Средства успешно положены!")
+		novigation()
+	}
+	function takeMoney(){
+		let amount = validNum("Какую сумму желаете снять?")
+		let totalTaken = 0;
+
+		for (var i = 0; i < historyTaken.length; i++) {
+			totalTaken += historyTaken[i]
+		}
+		if( (totalTaken+amount) > limit || amount > myUser.cashAmount){
+			alert("Нельзя снять больше лимита, за эту сессию вы сняли " + totalTaken + " нКоинов, лимит- 300,000 нКоинов или вы пытаетесь снять больше своих средств, ваш баланс: " + myUser.cashAmount)
+
+		}else{
+			myUser.cashAmount -= amount;
+			historyTaken.push(amount);
+			myUser.transactionHistory.push(`- ${amount}`);
+			alert("Средства успешно сняты!")
+		}
+		novigation()
+	}
+
+	function novigation(){
+		let interaction = parseInt(prompt("Введите 1 если хотите пополнить баланс, 2 если хотите снять средства, 3 если хотите посмотреть все данные и 4 если хотите выйти"))
+ 			if (interaction == 1) {
+ 				addMoney();
+ 			}else if(interaction == 2){
+ 				takeMoney();
+ 			}else if(interaction == 3){
+ 				myUser.showInfo()
+ 			}else{
+ 				exit();
+ 			}
+	}
+
+
+	function session(){
+		let name = prompt("Ваше имя")
+		let pass = prompt("Ваш пароль")
+		let cash = validNum("Ваш денежный баланс")
+	
+ 		
+
+ 		console.log(`Ваше имя ${name}`)
+ 		console.log(`Пароль ${pass}`)
+ 		console.log(`Баланс ${cash} нКоинов`)
+
+ 		let asd = parseInt(prompt("Введите 1 если данные в консоли верны и 0 если нет"))
+ 		if( asd === 1){
+ 			confirm(name, cash, pass)
+ 			alert("Ваши данные успешно сохранены!")
+ 			novigation()
+ 		}else if(asd === 0){
+ 			session()
+ 		}
+	}
+
+	session()
+	
+	
+
+
+
+</script>
+</body>
+</html>
